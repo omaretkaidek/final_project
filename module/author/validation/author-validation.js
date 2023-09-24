@@ -30,7 +30,7 @@ const id = param('id')
     .notEmpty()
     .withMessage('Last name is required');
   
-  const birthOfDate = body('birthOfDate')
+  const dateOfBirth = body('dateOfBirth')
     .isDate()
     .withMessage('Birth date must be a valid date')
     .notEmpty()
@@ -51,7 +51,7 @@ const id = param('id')
     .isDate()
     .withMessage('Death date must be a valid date')
     .custom((value, { req }) => {
-      const birthDate = new Date(req.body.birthOfDate);
+      const birthDate = new Date(req.body.dateOfBirth);
       const deathDate = new Date(value);
       return deathDate > birthDate;
     })
@@ -68,7 +68,7 @@ const authorValidationRules = [
     firstName,
     middleName,
     lastName,
-    birthOfDate,
+    dateOfBirth,
     country,
     deathDate,
     officialWebsite

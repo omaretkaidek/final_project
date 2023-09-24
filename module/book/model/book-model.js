@@ -60,7 +60,12 @@ const bookModel = {
                 searchQuery.where('publishers.name', 'like', `%${params.query}%`);
                 break;
             case 'author':
-                searchQuery.where('authors.firstName', 'like', `%${params.query}%`);
+                // Concatenating firstName, middleName, and lastName with space in between
+                searchQuery.where(
+                    knex.raw("CONCAT(authors.firstName, ' ', IFNULL(authors.middleName, ''), ' ', authors.lastName)"), 
+                    'like', 
+                    `%${params.query}%`
+                );
                 break;
             case 'tags':
                 searchQuery.where('books.tags', 'like', `%${params.query}%`);
@@ -68,7 +73,11 @@ const bookModel = {
             case 'any':
                 searchQuery.where('books.title', 'like', `%${params.query}%`)
                            .orWhere('publishers.name', 'like', `%${params.query}%`)
-                           .orWhere('authors.firstName', 'like', `%${params.query}%`)
+                           .orWhere(
+                                knex.raw("CONCAT(authors.firstName, ' ', IFNULL(authors.middleName, ''), ' ', authors.lastName)"), 
+                                'like', 
+                                `%${params.query}%`
+                            )
                            .orWhere('books.tags', 'like', `%${params.query}%`);
                 break;
             default:
@@ -78,8 +87,13 @@ const bookModel = {
         buildRangeQuery(searchQuery, 'books.availableUnits', params.availableUnitsStart, params.availableUnitsEnd);
         buildRangeQuery(searchQuery, 'books.unitPrice', params.unitPriceStart, params.unitPriceEnd);
     
-        return await searchQuery.select('books.*', 'publishers.name as publisherName', 'authors.firstName as authorName');
-    },
+        return await searchQuery.select(
+            'books.*', 
+            'publishers.name as publisherName', 
+            knex.raw("CONCAT(authors.firstName, ' ', IFNULL(authors.middleName, ''), ' ', authors.lastName) as authorName")
+        );
+    }
+    ,
 
     async getBookSuggestions(query) {
         return await knex('books')

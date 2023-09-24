@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const publisherRoutes = require('./module/publisher/routes/publisher.api.routes');
 const bookRoutes = require('./module/book/routes/book.api.routes');
 const authorRoutes = require('./module/author/Routes/author.api.routes');
+const reservationRoutes = require('./module/reservations/routes/reservation.api.routes');
 
 const app = express();
 const PORT = 3000;
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 app.use('/api', authorRoutes);
 app.use('/api', publisherRoutes);
 app.use('/api', bookRoutes);
+app.use('/api', reservationRoutes);
 
 // Basic error handler
 app.use((err, req, res, next) => {

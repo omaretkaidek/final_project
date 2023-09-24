@@ -1,6 +1,6 @@
 // PublisherController.js
 
-const reservationService = require('../service/publisher-service');
+const reservationService = require('../service/reservation-service');
 const { validationResult } = require('express-validator');
 
 
